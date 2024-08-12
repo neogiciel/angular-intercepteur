@@ -38,26 +38,26 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor,
-  HttpHandlerFn,
-  HttpHeaders
+  HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+@Injectable()
+export class LoggibgInterceptor implements HttpInterceptor {
 
-export function LoggingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-  
-  console.log("[LoggingInterceptor] interception")
-  
-  const headers = new HttpHeaders({
-    Authorization: "12345678"
-  })
+  constructor() {}
 
-  const newReq = req.clone({
-    headers
-  })
-
-  return next(newReq)
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    console.log("[HeadersInterceptor] interception")
+    console.log(request)
+    const GUID = 'f4179b26-21ac-432c-bcd8-cb4bc6e50981'
+    const modifiedRequest = request.clone({
+      setHeaders:{
+        GUID
+      }
+    })
+    return next.handle(modifiedRequest);
+  }
 }
 ```
 Aller dans le fichier : 
